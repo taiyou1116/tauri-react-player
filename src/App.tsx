@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import { homeDir } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { invoke } from '@tauri-apps/api';
+import "./App.css";
 
 type Entry = {
   type: 'dir' | 'file';
@@ -17,7 +18,7 @@ const App = () => {
   const [dir, setDir] = useState<string | null>(null);
   const [player, setPlayer] = useState<JSX.Element | null>(null);
   const [entries, setEntries] = useState<Entries | null>(null);
-  
+
   useEffect(() => {
     (async () => {
       const home = await homeDir();
@@ -60,16 +61,22 @@ const App = () => {
   </ul> : null;
 
   return (
-    <>
-      <h1>React Player</h1>
-      {player}
+    <div className='player-dis'>
+      <h1>React Tauri Player</h1>
+      <div className='video'>
+        {player}
+      </div>
+      <div className='src-path'>
+        src: {src ?? '(not selected)'}
+      </div>
       <br />
-      src: {src ?? '(not selected)'}
-      <br />
-      dir: {dir ?? ''}
-      <br />
-      {entry_list}
-    </>
+      <button>
+        <span className='btn-txt'>back</span>
+      </button>
+      <ul>
+        {entry_list}
+      </ul>
+    </div>
   );
 }
 
