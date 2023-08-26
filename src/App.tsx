@@ -61,9 +61,9 @@ const App = () => {
   const entry_list = entries ? <ul>
     {entries.map(entry => {
       if (entry.type === "dir") {
-        return <li key={entry.path} onClick={() => setDir(entry.path)}>{entry.name}</li>;
+        return <li key={entry.path} onClick={() => setDir(entry.path)}>🗂️{entry.name}</li>;
       } else {
-        return <li key={entry.path} onClick={() => setSrc(entry.path)}>{entry.name}</li>;
+        return <li key={entry.path} onClick={() => setSrc(entry.path)}>📄{entry.name}</li>;
       }
     })}
   </ul> : null;
@@ -76,6 +76,7 @@ const App = () => {
     if (currentDirParts) {
       currentDirParts.pop(); // 最後の要素を削除して1つ階層を戻る
       let parentDir = currentDirParts.join('/');
+      // hmに帰ってきたとき
       if (parentDir + "/" === hmDir) {
         parentDir = hmDir;
       }
