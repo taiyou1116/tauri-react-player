@@ -18,6 +18,7 @@ const App = () => {
   const [dir, setDir] = useState<string | null>(null);
   const [player, setPlayer] = useState<JSX.Element | null>(null);
   const [entries, setEntries] = useState<Entries | null>(null);
+  const [showBackButton, setShowBackButton] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -50,6 +51,13 @@ const App = () => {
     })();
   }, [dir]);
 
+  useEffect(() => {
+    (async () => {
+      const hmDir = await homeDir();
+      setShowBackButton(dir !== hmDir);
+    })();
+  }, [dir]);
+
   const entry_list = entries ? <ul>
     {entries.map(entry => {
       if (entry.type === "dir") {
@@ -60,19 +68,32 @@ const App = () => {
     })}
   </ul> : null;
 
+  const backPage = async () => {
+    const hmDir = await homeDir();
+    if (dir === hmDir) return;
+
+    const currentDirParts = dir?.split('/');
+    if (currentDirParts) {
+      currentDirParts.pop(); // 最後の要素を削除して1つ階層を戻る
+      let parentDir = currentDirParts.join('/');
+      if (parentDir + "/" === hmDir) {
+        parentDir = hmDir;
+      }
+      setDir(parentDir);
+    }
+  }
+
   return (
     <div className='player-dis'>
       <h1>React Tauri Player</h1>
       <div className='video'>
-        {player}
+        {player ?? '(not selected)'}
       </div>
       <div className='src-path'>
         src: {src ?? '(not selected)'}
       </div>
       <br />
-      <button>
-        <span className='btn-txt'>back</span>
-      </button>
+      {showBackButton && <button onClick={() => backPage()}>back</button>}
       <ul>
         {entry_list}
       </ul>
